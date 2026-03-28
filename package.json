@@ -1,0 +1,57 @@
+{
+  "name": "Todooooo",
+  "version": "1.0.0",
+  "description": "一个轻量级的待办事项桌面应用",
+  "main": "main.js",
+  "scripts": {
+    "start": "npx electron .",
+    "dev": "npx electron . --dev",
+    "build": "electron-builder --win",
+    "build:portable": "electron-builder --win portable",
+    "build:zip": "electron-builder --win zip",
+    "build:folder": "electron-builder --win dir",
+    "build:all": "npm run build:folder && npm run build:portable"
+  },
+  "keywords": [
+    "todo",
+    "electron"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^41.0.3",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.todooooo.app",
+    "productName": "Todooooo",
+    "directories": {
+      "output": "dist"
+    },
+    "electronDownload": {
+      "cache": "./electron-cache",
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "win": {
+      "target": [
+        "dir",
+        "portable"
+      ],
+      "icon": "static/img/favicon.ico"
+    },
+    "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.map",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/.cache",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ]
+  }
+}

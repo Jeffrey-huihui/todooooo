@@ -1,0 +1,95 @@
+# ==============================================
+# Electron Todo App Git Ignore Rules
+# ==============================================
+
+# 1. ✅ DIST FOLDERS (构建输出 - 用户指定)
+dist/
+dist-*/
+dist-portable/
+dist2/
+portable-dist/
+
+# 2. ✅ NODE MODULES (依赖目录 - 用户指定)
+node_modules/
+.npm/
+.node-gyp/
+
+# 3. ✅ ELECTRON CACHE (缓存目录 - 用户指定)
+electron-cache/
+.electron/
+
+# 4. ✅ BUILD ARTIFACTS (构建产物)
+win-unpacked/
+linux-unpacked/
+mac-unpacked/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.zip
+*.portable
+builder-effective-config.yaml
+app.asar
+
+# 5. ✅ LOCAL DATA FILES (应用数据)
+data/settings.json
+data/todos.json
+
+# 6. ✅ NPM/YARN FILES (包管理器)
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
+pnpm-lock.yaml
+
+# 7. ✅ TEMPORARY FILES (临时文件)
+temp_btn_styles.txt
+*.tmp
+*.temp
+*.log
+
+# 8. ✅ EDITOR/IDE FILES (编辑器配置)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 9. ✅ OPERATING SYSTEM FILES (系统文件)
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# 10. ✅ ENVIRONMENT FILES (环境变量)
+.env
+.env.local
+.env.*.local
+
+# 11. ✅ TEST & COVERAGE (测试文件)
+coverage/
+.nyc_output
+
+# 12. ✅ CACHE & LOGS (缓存和日志)
+.cache/
+logs/
+
+# 13. ✅ OTHER BUILD FILES (其他构建文件)
+out/
+build/
+resources/
+*.tsbuildinfo
+
+# 注意：以下文件应该保留在版本控制中：
+# - package.json          (项目配置)
+# - main.js              (主进程)
+# - renderer.js          (渲染进程)
+# - styles.css          (样式文件)
+# - index.html          (主页面)
+# - settings.html       (设置页面)
+# - settings.js         (设置脚本)
+# - staic/              (静态资源，如图标)
+# - data/              (目录结构保留，但内部json文件不跟踪)
+init-git.bat

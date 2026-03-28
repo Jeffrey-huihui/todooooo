@@ -1,0 +1,132 @@
+/* 主题透明度修复 - 将此内容添加到styles.css */
+
+/* 1. 修改默认背景为完全不透明 */
+::root {
+  --bg-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  --card-gradient: linear-gradient(135deg, var(--card-primary) 0%, var(--card-secondary) 100%);
+}
+
+/* 2. 确保透明度应用正确 - 容器基础样式 */
+.container {
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-gradient);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255, 0.2);
+  border-radius: var(--window-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05),
+              0 8px 40px rgba(0, 0, 0, 0.1);
+  /* 移除这里的opacity，透明度由背景颜色的alpha值控制 */
+}
+
+/* 3. 卡片区域也使用完全不透明 */
+.add-todo-section,
+.stats,
+.todo-item {
+  background: var(--card-gradient);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 4. 浅色主题 - 确保背景变量使用 */
+body.light-theme {
+  --bg-primary: rgba(255, 255, 255, 0.95);
+  --bg-secondary: rgba(255, 255, 255, 0.85);
+  --card-primary: rgba(255, 255, 255, 0.98);
+  --card-secondary: rgba(255, 255, 255, 0.95);
+}
+
+/* 5. 深色主题 - 确保背景变量使用 */
+body:not(.light-theme) {
+  --bg-primary: rgba(20, 25, 50, 0.95);
+  --bg-secondary: rgba(15, 20, 45, 0.85);
+  --card-primary: rgba(30, 35, 60, 0.98);
+  --card-secondary: rgba(25, 30, 55, 0.95);
+}
+
+/* 6. 颜色主题背景 - 覆盖深色/浅色主题的背景变量 */
+/* 紫蓝色系 */
+[data-color="#5b6cf7"] { --accent-color-rgb: 91, 108, 247; --bg-primary: rgba(245, 247, 255, 0.95); --bg-secondary: rgba(235, 240, 255, 0.85); --card-primary: rgba(248, 250, 255, 0.98); --card-secondary: rgba(242, 247, 255, 0.95); }
+[data-color="#7c3aed"] { --accent-color-rgb: 124, 58, 237; --bg-primary: rgba(248, 245, 255, 0.95); --bg-secondary: rgba(240, 235, 255, 0.85); --card-primary: rgba(250, 248, 255, 0.98); --card-secondary: rgba(245, 242, 255, 0.95); }
+[data-color="#8b5cf6"] { --accent-color-rgb: 139, 92, 246; --bg-primary: rgba(249, 247, 255, 0.95); --bg-secondary: rgba(243, 238, 255, 0.85); --card-primary: rgba(250, 249, 255, 0.98); --card-secondary: rgba(246, 243, 255, 0.95); }
+[data-color="#6366f1"] { --accent-color-rgb: 99, 102, 241; --bg-primary: rgba(246, 247, 255, 0.95); --bg-secondary: rgba(238, 241, 255, 0.85); --card-primary: rgba(249, 250, 255, 0.98); --card-secondary: rgba(243, 246, 255, 0.95); }
+[data-color="#3b82f6"] { --accent-color-rgb: 59, 130, 246; --bg-primary: rgba(245, 249, 255, 0.95); --bg-secondary: rgba(235, 245, 255, 0.85); --card-primary: rgba(248, 252, 255, 0.98); --card-secondary: rgba(242, 249, 255, 0.95); }
+
+/* 粉红色系 */
+[data-color="#c44569"] { --accent-color-rgb: 196, 69, 105; --bg-primary: rgba(255, 247, 250, 0.95); --bg-secondary: rgba(255, 240, 245, 0.85); --card-primary: rgba(255, 250, 253, 0.98); --card-secondary: rgba(255, 245, 250, 0.95); }
+[data-color="#ef4444"] { --accent-color-rgb: 239, 68, 68; --bg-primary: rgba(255, 248, 248, 0.95); --bg-secondary: rgba(255, 240, 240, 0.85); --card-primary: rgba(255, 252, 252, 0.98); --card-secondary: rgba(255, 248, 248, 0.95); }
+[data-color="#ec4899"] { --accent-color-rgb: 236, 72, 153; --bg-primary: rgba(255, 247, 252, 0.95); --bg-secondary: rgba(255, 240, 248, 0.85); --card-primary: rgba(255, 252, 254, 0.98); --card-secondary: rgba(255, 248, 252, 0.95); }
+
+/* 绿青色系 */
+[data-color="#10b981"] { --accent-color-rgb: 16, 185, 129; --bg-primary: rgba(247, 255, 251, 0.95); --bg-secondary: rgba(240, 255, 248, 0.85); --card-primary: rgba(250, 255, 253, 0.98); --card-secondary: rgba(245, 255, 251, 0.95); }
+[data-color="#14b8a6"] { --accent-color-rgb: 20, 184, 166; --bg-primary: rgba(247, 255, 253, 0.95); --bg-secondary: rgba(240, 255, 251, 0.85); --card-primary: rgba(250, 255, 254, 0.98); --card-secondary: rgba(245, 255, 252, 0.95); }
+[data-color="#06b6d4"] { --accent-color-rgb: 6, 182, 212; --bg-primary: rgba(245, 252, 255, 0.95); --bg-secondary: rgba(235, 248, 255, 0.85); --card-primary: rgba(248, 254, 255, 0.98); --card-secondary: rgba(242, 251, 255, 0.95); }
+
+/* 橙色 */
+[data-color="#f59e0b"] { --accent-color-rgb: 245, 158, 11; --bg-primary: rgba(255, 252, 245, 0.95); --bg-secondary: rgba(255, 248, 240, 0.85); --card-primary: rgba(255, 254, 250, 0.98); --card-secondary: rgba(255, 252, 248, 0.95); }
+
+/* 深色主题背景变量覆盖 - 与强调色协调 */
+body:not(.light-theme)[data-color="#5b6cf7"],
+body:not(.light-theme)[data-color="#7c3aed"],
+body:not(.light-theme)[data-color="#8b5cf6"],
+body:not(.light-theme)[data-color="#6366f1"],
+body:not(.light-theme)[data-color="#3b82f6"] {
+  --bg-primary: rgba(20, 25, 50, 0.95);
+  --bg-secondary: rgba(15, 20, 45, 0.85);
+  --card-primary: rgba(30, 35, 60, 0.98);
+  --card-secondary: rgba(25, 30, 55, 0.95);
+}
+
+body:not(.light-theme)[data-color="#c44569"],
+body:not(.light-theme)[data-color="#ef4444"],
+body:not(.light-theme)[data-color="#ec4899"] {
+  --bg-primary: rgba(50, 20, 25, 0.95);
+  --bg-secondary: rgba(45, 15, 20, 0.85);
+  --card-primary: rgba(60, 30, 35, 0.98);
+  --card-secondary: rgba(55, 25, 30, 0.95);
+}
+
+body:not(.light-theme)[data-color="#10b981"],
+body:not(.light-theme)[data-color="#14b8a6"],
+body:not(.light-theme)[data-color="#06b6d4"] {
+  --bg-primary: rgba(20, 40, 35, 0.95);
+  --bg-secondary: rgba(15, 35, 30, 0.85);
+  --card-primary: rgba(30, 50, 45, 0.98);
+  --card-secondary: rgba(25, 45, 40, 0.95);
+}
+
+body:not(.light-theme)[data-color="#f59e0b"] {
+  --bg-primary: rgba(50, 35, 20, 0.95);
+  --bg-secondary: rgba(45, 30, 15, 0.85);
+  --card-primary: rgba(60, 45, 30, 0.98);
+  --card-secondary: rgba(55, 40, 25, 0.95);
+}
+
+/* 透明度控制：通过修改背景颜色的alpha值来实现 */
+.container {
+  transition: opacity 0.3s ease;
+}
+
+/* 设置窗口特定样式 */
+.settings-container {
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-gradient);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--window-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05),
+              0 8px 40px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease;
+}

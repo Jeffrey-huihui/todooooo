@@ -1,0 +1,1671 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #007AFF;
+  --primary-hover: #0056CC;
+  --success-color: #34C759;
+  --danger-color: #FF3B30;
+  --warning-color: #FF9500;
+  --bg-color: rgba(255, 255, 255, 1);
+  --bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  --card-bg: rgba(255, 255, 255, 1);
+  --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+  --radius: 16px;
+  --window-radius: 20px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: transparent;
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow: hidden;
+  -webkit-app-region: drag;
+}
+
+body.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+body.fade-out {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* 渐入渐出效果 - 仅在最小化/恢复时触发 */
+body.fade-out {
+  opacity: 0;
+}
+
+body.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body * {
+  -webkit-app-region: no-drag;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-gradient);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--window-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 
+              0 8px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* 头部样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+/* 增大拖拽区域 - 整个头部左侧和中间都可以拖拽 */
+.header-left {
+  -webkit-app-region: drag;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* 确保标题也能拖拽 */
+.title {
+  -webkit-app-region: drag;
+}
+
+.header-right {
+  -webkit-app-region: no-drag;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5856D6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  cursor: default;
+}
+
+/* 圆形图标显示 */
+.title-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5856D6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.title-icon img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* 按钮样式 */
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5856D6 100%);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.btn-icon {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--accent-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 14px;
+  gap: 6px;
+  border-radius: 10px;
+  font-weight: 600;
+  /* 准备阴影效果的过渡动画 */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* 初始化无阴影 */
+  box-shadow: 
+    0 0 0 0 rgba(var(--accent-color-rgb), 0),
+    0 0 0 0 rgba(var(--accent-color-rgb), 0),
+    0 0 0 0 rgba(var(--accent-color-rgb), 0);
+}
+
+/* 深色主题下的按钮样式 */
+body:not(.light-theme) .btn-icon {
+  background: rgba(30, 35, 60, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+body:not(.light-theme) .btn-icon.active {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+/* 正常布局 - 浅色模式hover（所有按钮都有主题色光芒） */
+.btn-icon:hover {
+  background: none !important;
+  transform: none !important;
+  /* 所有按钮都有双层主题色光芒 */
+  box-shadow: 
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.15),
+    0 0 0 6px rgba(var(--accent-color-rgb), 0.1) !important;
+}
+
+.btn-icon.active {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #5856D6 100%);
+  color: white !important;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+/* active状态下图标强制为白色 */
+.btn-icon.active svg {
+  stroke: white !important;
+  color: white !important;
+}
+
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* 深色主题下的按钮样式 */
+body:not(.light-theme) .btn-icon {
+  background: rgba(30, 35, 60, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color);
+  font-weight: 600;
+  /* 深色模式下的阴影初始化 */
+  box-shadow: 
+    0 0 0 0 rgba(var(--accent-color-rgb), 0),
+    0 0 0 0 rgba(var(--accent-color-rgb), 0),
+    0 0 0 0 rgba(var(--accent-color-rgb), 0);
+}
+
+/* 添加任务区域 */
+.add-todo-section {
+  background: var(--card-primary);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.input-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#todoInput {
+  flex: 1;
+  padding: 14px 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  font-size: 15px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+#todoInput:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), var(--shadow-sm);
+  background: rgba(255, 255, 255, 1);
+}
+
+#todoInput::placeholder {
+  color: var(--text-secondary);
+}
+
+body:not(.light-theme) #todoInput {
+  background: rgba(30, 35, 60, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f5f5f7;
+}
+
+.input-options {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.option-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.option-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* 优先级选择器 */
+.priority-selector {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+}
+
+/* 深色模式下的优先级选择器背景更明显 */
+body:not(.light-theme) .priority-selector {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.priority-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+
+.priority-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.priority-btn.active {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 深色模式下的优先级按钮 */
+body:not(.light-theme) .priority-btn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body:not(.light-theme) .priority-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+body:not(.light-theme) .priority-btn.active {
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 优先级按钮颜色 */
+.priority-btn[data-priority="low"] {
+  color: var(--success-color);
+}
+
+.priority-btn[data-priority="medium"] {
+  color: var(--warning-color);
+}
+
+.priority-btn[data-priority="high"] {
+  color: var(--danger-color);
+}
+
+/* 深色模式下保持优先级颜色 */
+body:not(.light-theme) .priority-btn[data-priority="low"] {
+  color: #4ade80;
+}
+
+body:not(.light-theme) .priority-btn[data-priority="medium"] {
+  color: #fbbf24;
+}
+
+body:not(.light-theme) .priority-btn[data-priority="high"] {
+  color: #f87171;
+}
+
+/* 日期输入 */
+.date-input {
+  padding: 8px 14px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  outline: none;
+  background: var(--bg-color);
+  cursor: pointer;
+  width: 100%;
+}
+
+.date-input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 4px rgba(var(--accent-color-rgb), 0.15);
+  background: var(--bg-color);
+}
+
+body:not(.light-theme) .date-input {
+  background: rgba(30, 35, 60, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f5f5f7;
+}
+
+/* 日历图标 - 根据主题自适应 */
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 1;
+  filter: invert(0);
+  transition: filter 0.3s ease;
+}
+
+/* 深色主题下的日历图标 */
+body:not(.light-theme) .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5);
+}
+
+.date-input::-webkit-datetime-edit {
+  cursor: pointer;
+}
+
+/* 美化日历选择器 */
+.date-input::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+.date-input::-webkit-datetime-edit-text {
+  color: var(--text-secondary);
+  padding: 0 2px;
+}
+
+/* 浅色主题下日历文字与输入框一致 */
+body.light-theme .date-input::-webkit-datetime-edit-text {
+  color: var(--text-secondary);
+}
+
+body:not(.light-theme) .date-input::-webkit-datetime-edit-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 浅色主题下日历数字文字 */
+body.light-theme .date-input::-webkit-datetime-edit-month-field,
+body.light-theme .date-input::-webkit-datetime-edit-day-field,
+body.light-theme .date-input::-webkit-datetime-edit-year-field,
+body.light-theme .date-input::-webkit-datetime-edit-hour-field,
+body.light-theme .date-input::-webkit-datetime-edit-minute-field {
+  color: var(--text-primary);
+}
+
+/* 统计信息 */
+.stats {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--card-gradient);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 8px 4px;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-color);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 任务列表 */
+.todo-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 8px;
+}
+
+/* 日期分组标题 */
+.date-group-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 8px 4px 4px;
+  margin-bottom: 4px;
+  position: sticky;
+  top: 0;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.date-group-header.today {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.date-group-header.today::before {
+  content: '📅 ';
+}
+
+.date-group-header.yesterday::before {
+  content: '📌 ';
+}
+
+body.compact-mode .date-group-header {
+  font-size: 12px;
+  padding: 6px 8px 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.todo-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* 任务项 */
+.todo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: var(--card-gradient);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  animation: slideIn 0.4s ease;
+  border: 1px solid var(--border-color);
+}
+
+.todo-item-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 紧凑模式样式 - 简化版 */
+body.compact-mode {
+  --bg-primary: rgba(255, 255, 255, 1);
+  --bg-secondary: rgba(255, 255, 255, 1);
+  --card-primary: rgba(255, 255, 255, 1);
+  --card-secondary: rgba(255, 255, 255, 1);
+}
+
+body:not(.light-theme).compact-mode {
+  --bg-primary: rgba(20, 25, 50, 1);
+  --bg-secondary: rgba(20, 25, 50, 1);
+  --card-primary: rgba(30, 35, 60, 1);
+  --card-secondary: rgba(30, 35, 60, 1);
+}
+
+body.compact-mode .container {
+  padding: 8px;
+  gap: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.compact-mode .header {
+  padding: 2px 0;
+  margin-bottom: 2px;
+}
+
+body.compact-mode .title {
+  font-size: 16px;
+}
+
+body.compact-mode .header-right {
+  display: flex;
+  gap: 4px;
+}
+
+body.compact-mode .btn-icon {
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 8px;
+  min-width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* 浅色紧凑模式下的按钮hover - 双层光芒效果 (2px→3px) */
+body.light-theme.compact-mode .btn-icon:hover {
+  background: none !important;
+  transform: none !important;
+  /* 浅色紧凑模式下，双层光芒效果 */
+  box-shadow: 
+    0 0 0 2px rgba(var(--accent-color-rgb), 0.15),
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.1) !important;
+}
+
+/* 深色紧凑模式下的按钮hover - 双层光芒效果 (2px→3px) */
+body:not(.light-theme).compact-mode .btn-icon:hover {
+  background: none !important;
+  transform: none !important;
+  /* 深色紧凑模式下，双层光芒效果 */
+  box-shadow: 
+    0 0 0 2px rgba(var(--accent-color-rgb), 0.25),
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.15) !important;
+}
+
+body:not(.light-theme).compact-mode .btn-icon {
+  background: rgba(30, 35, 60, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* 深色模式正常布局下的按钮hover - 双层主题色光芒 */
+body:not(.light-theme) .btn-icon:hover {
+  background: none !important;
+  transform: none !important;
+  /* 深色模式下，双层光芒效果 */
+  box-shadow: 
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.25),
+    0 0 0 6px rgba(var(--accent-color-rgb), 0.15) !important;
+}
+
+body.compact-mode .btn-icon.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+body.compact-mode .btn-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+body.compact-mode .add-todo-section,
+body.compact-mode .stats {
+  display: none !important;
+}
+
+/* 紧凑模式 - 任务列表 */
+body.compact-mode .todo-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  gap: 0;
+  padding-right: 2px;
+}
+
+body.compact-mode .date-group-header {
+  font-size: 11px;
+  padding: 4px 6px;
+  background: var(--card-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body:not(.light-theme).compact-mode .date-group-header {
+  background: rgba(30, 35, 60, 1);
+  color: #a1a1a6;
+}
+
+body.compact-mode .todo-item {
+  padding: 6px 8px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 0;
+  background: var(--card-primary);
+  box-shadow: none;
+  animation: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 32px;
+}
+
+body:not(.light-theme).compact-mode .todo-item {
+  background: rgba(30, 35, 60, 1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body:not(.light-theme).compact-mode .todo-text {
+  color: #f5f5f7;
+}
+
+body.compact-mode .todo-item-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* 优先级颜色圈圈 */
+.priority-circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.priority-circle.high {
+  background: var(--danger-color);
+}
+
+.priority-circle.medium {
+  background: var(--warning-color);
+}
+
+.priority-circle.low {
+  background: var(--success-color);
+}
+
+body.compact-mode .todo-checkbox {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+body.compact-mode .todo-text {
+  font-size: 13px;
+  flex: 1;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body:not(.light-theme).compact-mode .todo-text {
+  color: #f5f5f7;
+}
+
+body.compact-mode .todo-actions,
+body.compact-mode .todo-item-meta,
+body.compact-mode .subtasks-container {
+  display: none !important;
+}
+
+body.compact-mode .todo-item:first-child {
+  border-top: 1px solid var(--border-color);
+}
+
+body.compact-mode .todo-item:last-child {
+  border-bottom: none;
+}
+
+body.compact-mode .todo-item:only-child {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+}
+
+body.compact-mode .todo-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: none;
+  box-shadow: none;
+}
+
+body:not(.light-theme).compact-mode .todo-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.compact-mode .todo-item.completed {
+  opacity: 0.6;
+}
+
+body.compact-mode .todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.todo-item-meta {
+  display: flex;
+  gap: 12px;
+  padding-left: 36px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-color);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.meta-tag.priority-high {
+  color: var(--danger-color);
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.meta-tag.priority-medium {
+  color: var(--warning-color);
+  background: rgba(255, 149, 0, 0.1);
+}
+
+.meta-tag.priority-low {
+  color: var(--success-color);
+  background: rgba(52, 199, 89, 0.1);
+}
+
+.meta-tag.due-date {
+  color: var(--text-primary);
+}
+
+.meta-tag.due-date.overdue {
+  color: var(--danger-color);
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.meta-tag.due-date.today {
+  color: var(--warning-color);
+  background: rgba(255, 149, 0, 0.1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+  border-color: rgba(0, 122, 255, 0.2);
+}
+
+.todo-item.completed {
+  opacity: 0.6;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.todo-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.todo-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.todo-checkbox.checked {
+  background: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.todo-checkbox svg {
+  width: 14px;
+  height: 14px;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.todo-checkbox.checked svg {
+  opacity: 1;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 15px;
+  color: var(--text-primary);
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+}
+
+.todo-action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.todo-action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.todo-action-btn.edit {
+  color: var(--primary-color);
+  background: rgba(0, 122, 255, 0.1);
+}
+
+.todo-action-btn.edit:hover {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+.todo-action-btn.delete {
+  color: var(--danger-color);
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.todo-action-btn.delete:hover {
+  background: rgba(255, 59, 48, 0.2);
+}
+
+
+
+/* 子任务 */
+.subtasks-container {
+  margin-left: 36px;
+  padding-left: 12px;
+  border-left: 2px solid var(--border-color);
+}
+
+body.compact-mode .subtasks-container {
+  display: none;
+}
+
+.subtasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.subtasks-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.add-subtask-btn {
+  font-size: 12px;
+  color: var(--primary-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.add-subtask-btn:hover {
+  text-decoration: underline;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.subtask-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.subtask-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.subtask-checkbox.checked {
+  background: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.subtask-checkbox svg {
+  width: 10px;
+  height: 10px;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.subtask-checkbox.checked svg {
+  opacity: 1;
+}
+
+.subtask-text {
+  flex: 1;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.subtask-item.completed .subtask-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.subtask-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.subtask-item:hover .subtask-actions {
+  opacity: 1;
+}
+
+.subtask-action-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  font-size: 12px;
+}
+
+.subtask-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.subtask-action-btn.edit {
+  color: var(--primary-color);
+  background: rgba(0, 122, 255, 0.1);
+}
+
+.subtask-action-btn.delete {
+  color: var(--danger-color);
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.subtask-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 2px solid var(--primary-color);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+}
+
+/* 空状态 */
+.empty-state {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-state.show {
+  display: flex;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.empty-subtext {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Toast提示 */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.hide {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+/* 编辑模式 */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-actions button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-actions .save-btn {
+  background: var(--success-color);
+  color: white;
+}
+
+.edit-actions .cancel-btn {
+  background: var(--text-secondary);
+  color: white;
+}
+
+/* 主题系统 */
+:root {
+  --accent-color: #5b6cf7; /* 默认强调色 */
+  --bg-primary: rgba(255, 255, 255, 0.85);
+  --bg-secondary: rgba(255, 255, 255, 0.75);
+  --card-primary: rgba(255, 255, 255, 0.92);
+  --card-secondary: rgba(255, 255, 255, 0.88);
+}
+
+/* 浅色主题 */
+body.light-theme {
+  --bg-primary: rgba(255, 255, 255, 1);
+  --bg-secondary: rgba(255, 255, 255, 1);
+  --card-primary: rgba(255, 255, 255, 1);
+  --card-secondary: rgba(255, 255, 255, 1);
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 深色主题（默认） */
+body:not(.light-theme) {
+  --bg-primary: rgba(20, 25, 50, 1);
+  --bg-secondary: rgba(20, 25, 50, 1);
+  --card-primary: rgba(30, 35, 60, 1);
+  --card-secondary: rgba(30, 35, 60, 1);
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 强调色应用 */
+.container {
+  background: var(--bg-primary);
+}
+
+.btn-primary {
+  background: var(--accent-color) !important;
+}
+
+.btn-icon.active {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color) 100%) !important;
+  color: white !important;
+  border-color: transparent;
+}
+
+/* active状态下图标强制为白色 */
+.btn-icon.active svg {
+  stroke: white !important;
+  color: white !important;
+}
+
+/* .btn-icon:hover {
+  background: none !important;
+  transform: none !important;
+} */
+
+.add-todo-section {
+  background: var(--card-primary);
+}
+
+.stats {
+  background: linear-gradient(135deg, 
+    var(--card-primary) 0%, 
+    rgba(var(--accent-color-rgb), 0.02) 100%);
+}
+
+.todo-item {
+  background: var(--card-primary);
+}
+
+.todo-item:hover {
+  border-color: rgba(var(--accent-color-rgb), 0.3) !important;
+  box-shadow: 0 4px 16px rgba(var(--accent-color-rgb), 0.1) !important;
+}
+
+#todoInput:focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 4px rgba(var(--accent-color-rgb), 0.15), var(--shadow-sm) !important;
+}
+
+.date-input:focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 4px rgba(var(--accent-color-rgb), 0.15) !important;
+}
+
+.todo-checkbox:hover {
+  border-color: var(--accent-color) !important;
+}
+
+.todo-checkbox.checked {
+  background: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.todo-action-btn.edit {
+  color: var(--accent-color) !important;
+  background: rgba(var(--accent-color-rgb), 0.1) !important;
+}
+
+.todo-action-btn.edit:hover {
+  background: rgba(var(--accent-color-rgb), 0.2) !important;
+}
+
+.add-subtask-btn {
+  color: var(--accent-color) !important;
+}
+
+.priority-btn.active {
+  color: var(--accent-color) !important;
+  background: rgba(var(--accent-color-rgb), 0.1) !important;
+}
+
+/* 美化日历选择器 */
+::-webkit-datetime-edit {
+  padding: 0;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  background: transparent;
+}
+
+::-webkit-datetime-edit-text {
+  color: var(--text-secondary);
+  padding: 0;
+}
+
+::-webkit-datetime-edit-month-field,
+::-webkit-datetime-edit-day-field,
+::-webkit-datetime-edit-year-field,
+::-webkit-datetime-edit-hour-field,
+::-webkit-datetime-edit-minute-field {
+  color: var(--text-primary);
+}
+
+/* 日历选择器弹窗样式 */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>');
+}
+
+/* 确认弹窗美化 */
+confirm-dialog {
+  background: var(--card-primary) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--border-color) !important;
+  overflow: hidden !important;
+}
+
+confirm-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* 自定义confirm弹窗样式 */
+.custom-confirm-dialog {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: var(--card-primary) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  min-width: 320px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid var(--border-color) !important;
+  z-index: 9999 !important;
+  animation: dialogFadeIn 0.3s ease !important;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.custom-confirm-dialog-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 12px !important;
+  border-bottom: 2px solid var(--accent-color) !important;
+}
+
+.custom-confirm-dialog-message {
+  font-size: 15px !important;
+  color: var(--text-secondary) !important;
+  margin-bottom: 24px !important;
+  line-height: 1.6 !important;
+}
+
+.custom-confirm-dialog-buttons {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+}
+
+.custom-confirm-dialog-btn {
+  padding: 10px 20px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.custom-confirm-dialog-btn-cancel {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+body:not(.light-theme) .custom-confirm-dialog-btn-cancel {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.custom-confirm-dialog-btn-confirm {
+  background: var(--accent-color) !important;
+  color: white !important;
+}
+
+/* 功能按钮 hover 效果 */
+.btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.custom-confirm-dialog-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+.custom-confirm-dialog-btn-confirm:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(var(--accent-color-rgb), 0.3) !important;
+}
+
+
+.stat-number {
+  color: var(--accent-color) !important;
+}
+
+.title-icon {
+  background: var(--accent-color) !important;
+}
+
+.title {
+  color: var(--accent-color) !important;
+}
+
+.date-group-header.today {
+  color: var(--accent-color) !important;
+}
+
+/* 为每个颜色生成RGB值 */
+[data-color="#5b6cf7"] { --accent-color-rgb: 91, 108, 247; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#7c3aed"] { --accent-color-rgb: 124, 58, 237; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#c44569"] { --accent-color-rgb: 196, 69, 105; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#3b82f6"] { --accent-color-rgb: 59, 130, 246; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#10b981"] { --accent-color-rgb: 16, 185, 129; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#ef4444"] { --accent-color-rgb: 239, 68, 68; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#f59e0b"] { --accent-color-rgb: 245, 158, 11; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#14b8a6"] { --accent-color-rgb: 20, 184, 166; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#06b6d4"] { --accent-color-rgb: 6, 182, 212; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#8b5cf6"] { --accent-color-rgb: 139, 92, 246; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#6366f1"] { --accent-color-rgb: 99, 102, 241; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+[data-color="#ec4899"] { --accent-color-rgb: 236, 72, 153; --bg-primary: rgba(255, 255, 255, 1); --bg-secondary: rgba(255, 255, 255, 1); --card-primary: rgba(255, 255, 255, 1); --card-secondary: rgba(255, 255, 255, 1); }
+
+/* 深色主题背景变量覆盖 */
+body:not(.light-theme)[data-color="#5b6cf7"],
+body:not(.light-theme)[data-color="#7c3aed"],
+body:not(.light-theme)[data-color="#8b5cf6"],
+body:not(.light-theme)[data-color="#6366f1"],
+body:not(.light-theme)[data-color="#3b82f6"] {
+  --bg-primary: rgba(20, 25, 50, 1);
+  --bg-secondary: rgba(20, 25, 50, 1);
+  --card-primary: rgba(30, 35, 60, 1);
+  --card-secondary: rgba(30, 35, 60, 1);
+}
+
+body:not(.light-theme)[data-color="#c44569"],
+body:not(.light-theme)[data-color="#ef4444"],
+body:not(.light-theme)[data-color="#ec4899"] {
+  --bg-primary: rgba(50, 20, 25, 1);
+  --bg-secondary: rgba(50, 20, 25, 1);
+  --card-primary: rgba(60, 30, 35, 1);
+  --card-secondary: rgba(60, 30, 35, 1);
+}
+
+body:not(.light-theme)[data-color="#10b981"],
+body:not(.light-theme)[data-color="#14b8a6"],
+body:not(.light-theme)[data-color="#06b6d4"] {
+  --bg-primary: rgba(20, 40, 35, 1);
+  --bg-secondary: rgba(20, 40, 35, 1);
+  --card-primary: rgba(30, 50, 45, 1);
+  --card-secondary: rgba(30, 50, 45, 1);
+}
+
+body:not(.light-theme)[data-color="#f59e0b"] {
+  --bg-primary: rgba(50, 35, 20, 1);
+  --bg-secondary: rgba(50, 35, 20, 1);
+  --card-primary: rgba(60, 45, 30, 1);
+  --card-secondary: rgba(60, 45, 30, 1);
+}
+
+/* 透明度控制 */
+.container {
+  transition: opacity 0.3s ease;
+}
+
+/* 设置窗口特定样式 */
+.settings-container {
+  background: var(--bg-primary);
+  opacity: 1 !important;
+}
+
+/* 浅色主题下的设置页面 */
+body.light-theme .settings-container {
+  --bg-primary: rgba(255, 255, 255, 1);
+}
+
+/* 深色主题下的设置页面 */
+body:not(.light-theme) .settings-container {
+  --bg-primary: rgba(20, 25, 50, 1);
+}
+
+/* 按钮active状态下的hover - 保持active样式并添加光芒效果 */
+.btn-icon.active:hover,
+body:not(.light-theme) .btn-icon.active:hover,
+body.compact-mode .btn-icon.active:hover,
+body:not(.light-theme).compact-mode .btn-icon.active:hover {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-color) 100%) !important;
+  transform: none !important;
+}
+
+/* 浅色模式下的active按钮hover - 主题色光芒 */
+.btn-icon.active:hover,
+body.light-theme .btn-icon.active:hover,
+body.light-theme.compact-mode .btn-icon.active:hover {
+  /* active状态下添加主题色光芒 */
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.25),
+    0 0 0 6px rgba(var(--accent-color-rgb), 0.15) !important;
+}
+
+/* 深色模式下的active按钮hover - 白色光芒增强active效果 */
+body:not(.light-theme) .btn-icon.active:hover,
+body:not(.light-theme).compact-mode .btn-icon.active:hover {
+  /* 深色模式下使用白色光芒以增强active效果 */
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 0 3px rgba(255, 255, 255, 0.25),
+    0 0 0 6px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 确保active状态下hover时图标保持白色 */
+.btn-icon.active:hover svg {
+  stroke: white !important;
+  color: white !important;
+}
+
+/* 紧凑模式下的active按钮hover - 适配尺寸 (2px→3px) */
+body.light-theme.compact-mode .btn-icon.active:hover {
+  /* 紧凑模式下使用适当的尺寸 */
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 0 2px rgba(var(--accent-color-rgb), 0.25),
+    0 0 0 3px rgba(var(--accent-color-rgb), 0.15) !important;
+}
+
+/* 深色紧凑模式下的active按钮hover - 适配尺寸 (2px→3px) */
+body:not(.light-theme).compact-mode .btn-icon.active:hover {
+  /* 深色紧凑模式下使用适当的尺寸 */
+  box-shadow: 
+    var(--shadow-sm),
+    0 0 0 2px rgba(255, 255, 255, 0.25),
+    0 0 0 3px rgba(255, 255, 255, 0.15) !important;
+}

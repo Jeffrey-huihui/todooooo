@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>设置 - Todooooo</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .settings-container {
+      width: 100%;
+      height: 100vh;
+      background: var(--bg-primary);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--window-radius);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05),
+                  0 8px 40px rgba(0, 0, 0, 0.1);
+      user-select: none;
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      -webkit-app-region: drag;
+    }
+
+    .settings-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .settings-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .settings-close:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--text-primary);
+    }
+
+    .settings-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .settings-section {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .setting-item {
+      margin-bottom: 20px;
+    }
+
+    .setting-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .color-picker {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+
+    .color-option {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+      border-color: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .color-option.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slider {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(0, 0, 0, 0.15);
+      outline: none;
+    }
+
+    body.light-theme .slider {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      cursor: pointer;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider-value {
+      min-width: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .theme-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .theme-option {
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .theme-option:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .theme-option.selected {
+      background: var(--accent-color);
+      color: white;
+      border-color: var(--accent-color);
+    }
+
+    .settings-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .color-names {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .color-name {
+      text-align: center;
+      flex: 1;
+    }
+
+    /* 开关样式 */
+    .switch-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      border-radius: 28px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .switch input:checked + .switch-slider {
+      background-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.3),
+                  inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .switch input:checked + .switch-slider:before {
+      transform: translateX(24px);
+    }
+
+    .switch:hover .switch-slider:before {
+      transform: scale(1.05);
+    }
+
+    .switch input:checked:hover + .switch-slider:before {
+      transform: translateX(24px) scale(1.05);
+    }
+
+    body.light-theme .switch-slider {
+      background-color: rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <div class="settings-header">
+      <h1 class="settings-title">设置</h1>
+      <button class="settings-close" id="closeSettings">×</button>
+    </div>
+
+    <div class="settings-content">
+      <!-- 主题设置 -->
+      <div class="settings-section">
+        <h2 class="section-title">主题</h2>
+        
+        <div class="setting-item">
+          <label class="setting-label">主题模式</label>
+          <div class="theme-options">
+            <div class="theme-option" data-theme="light">
+              ☀️ 浅色
+            </div>
+            <div class="theme-option" data-theme="default">
+              🌙 深色
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <label class="setting-label">主题色</label>
+          <div class="color-picker">
+            <div class="color-option" data-color="#5b6cf7" style="background: #5b6cf7;"></div>
+            <div class="color-option" data-color="#7c3aed" style="background: #7c3aed;"></div>
+            <div class="color-option" data-color="#c44569" style="background: #c44569;"></div>
+            <div class="color-option" data-color="#3b82f6" style="background: #3b82f6;"></div>
+            <div class="color-option" data-color="#10b981" style="background: #10b981;"></div>
+            <div class="color-option" data-color="#ef4444" style="background: #ef4444;"></div>
+            <div class="color-option" data-color="#f59e0b" style="background: #f59e0b;"></div>
+            <div class="color-option" data-color="#14b8a6" style="background: #14b8a6;"></div>
+            <div class="color-option" data-color="#06b6d4" style="background: #06b6d4;"></div>
+            <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;"></div>
+            <div class="color-option" data-color="#6366f1" style="background: #6366f1;"></div>
+            <div class="color-option" data-color="#ec4899" style="background: #ec4899;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 外观设置 -->
+      <div class="settings-section">
+        <h2 class="section-title">外观</h2>
+
+        <div class="setting-item">
+          <label class="setting-label">窗口不透明度</label>
+          <div class="slider-container">
+            <input type="range" class="slider" id="opacitySlider" min="30" max="100" step="1" value="95">
+            <span class="slider-value" id="opacityValue">95%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行为设置 -->
+      <div class="settings-section">
+        <h2 class="section-title">行为</h2>
+
+        <div class="setting-item">
+          <div class="switch-container">
+            <span style="font-size: 13px; color: var(--text-secondary);">
+              启用后窗口靠近边缘自动吸附隐藏
+            </span>
+            <label class="switch">
+              <input type="checkbox" id="edgeDockingSwitch" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <button class="btn btn-secondary" id="resetSettings">重置设置</button>
+      <button class="btn btn-primary" id="saveSettings">保存设置</button>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

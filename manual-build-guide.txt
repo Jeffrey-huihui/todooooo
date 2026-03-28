@@ -1,0 +1,106 @@
+========================================
+MANUAL BUILD GUIDE - When Auto Scripts Fail
+========================================
+
+PROBLEM: File locked error when building portable version:
+"remove D:\WWW\Todooooo\dist\win-unpacked\resources\app.asar: The process cannot access the file because it is being used by another process."
+
+SOLUTION STEPS:
+
+STEP 1: PREPARE YOUR SYSTEM
+1. Close ALL applications:
+   - Your code editor (VS Code, WebStorm, etc.)
+   - Any Todooooo applications running
+   - File Explorer windows showing the project folder
+
+2. Open Task Manager (Ctrl+Shift+Esc):
+   - End any "electron.exe" processes
+   - End any "node.exe" processes
+   - End any "Todooooo.exe" processes
+
+3. Disable temporarily (optional):
+   - Windows Defender real-time protection
+   - Third-party antivirus software
+
+STEP 2: MANUAL CLEANUP
+Open Command Prompt AS ADMINISTRATOR and run:
+
+cd /d "D:\WWW\Todooooo"
+
+:: Check for locked files
+handle.exe app.asar 2>nul || echo If handle not found, skip this
+
+:: Force delete dist folder
+rmdir /s /q dist 2>nul
+
+:: If still exists, use PowerShell
+powershell -Command "Remove-Item -Path 'dist' -Recurse -Force -ErrorAction SilentlyContinue"
+
+:: Wait a moment
+timeout /t 5
+
+STEP 3: ALTERNATIVE BUILD METHODS
+
+METHOD A: Build to different directory
+npx.cmd electron-builder --win portable --config.output=dist2
+
+If successful, manually move:
+move dist2 dist
+
+METHOD B: Build folder version first, then portable
+:: First build unpacked version
+npx.cmd electron-builder --win dir
+
+:: Then build portable from unpacked
+npx.cmd electron-builder --win portable
+
+METHOD C: Use --publish never to skip file operations
+npx.cmd electron-builder --win portable --publish never
+
+METHOD D: Change working directory
+:: Copy project to temp location
+xcopy /E /I D:\WWW\Todooooo C:\Temp\TodoooBuild
+
+:: Build from temp location
+cd /d C:\Temp\TodoooBuild
+npx.cmd electron-builder --win portable
+
+:: Copy result back
+copy C:\Temp\TodoooBuild\dist\*.exe D:\WWW\Todooooo\dist\
+
+STEP 4: QUICK FIX SCRIPT
+If you're still having issues, use this PowerShell script:
+
+```
+# Save as fix-build.ps1 and run as Administrator
+Stop-Process -Name electron, node, Todooooo -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 3
+
+# Change to your project directory
+Set-Location "D:\WWW\Todooooo"
+
+# Remove with retry logic
+$retries = 3
+$delay = 2
+do {
+    Remove-Item -Path "dist" -Recurse -Force -ErrorAction SilentlyContinue
+    if (-not (Test-Path "dist")) { break }
+    Start-Sleep -Seconds $delay
+    $retries--
+} while ($retries -gt 0)
+
+# Build
+npx.cmd electron-builder --win portable
+```
+
+STEP 5: FINAL RESORT - REBOOT
+If nothing works:
+1. Restart your computer
+2. Immediately after login, run simple-fix.bat
+3. Don't open any other programs first
+
+========================================
+SUMMARY: The core issue is file locking.
+Most likely your IDE or a background process
+is holding the app.asar file open.
+========================================
