@@ -92,4 +92,4 @@ resources/
 # - settings.js         (设置脚本)
 # - staic/              (静态资源，如图标)
 # - data/              (目录结构保留，但内部json文件不跟踪)
-init-git.bat
+

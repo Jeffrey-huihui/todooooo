@@ -187,6 +187,9 @@ function createTodoElement(todo) {
     mainContent.appendChild(checkbox);
     mainContent.appendChild(text);
     item.appendChild(mainContent);
+
+    // 添加紧凑模式下的预览提示框
+    setupCompactTooltip(item, todo);
     
     return item;
   }
@@ -966,4 +969,183 @@ function showNotification(message, type = 'default') {
 // 请求通知权限
 if ('Notification' in window && Notification.permission === 'default') {
   Notification.requestPermission();
+}
+
+// ==========================================
+// 托盘点击时的彩虹边框效果
+// ==========================================
+
+/**
+ * 显示彩虹边框效果
+ * 当从托盘点击显示窗口时，在窗口周围显示彩虹跑马灯边框
+ * @param {number} cssAnimationDuration - CSS动画时长（秒），默认0.5s
+ */
+function showRainbowBorder(cssAnimationDuration = 0.5) {
+  // 检查是否已存在边框元素
+  let glowElement = document.getElementById('edge-reveal-glow');
+  
+  // 如果已存在，先移除旧的
+  if (glowElement) {
+    glowElement.remove();
+  }
+  
+  // 创建新的边框元素
+  glowElement = document.createElement('div');
+  glowElement.id = 'edge-reveal-glow';
+  glowElement.className = 'edge-reveal-glow';
+  
+  // 添加发光效果层
+  const glowBorder = document.createElement('div');
+  glowBorder.className = 'glow-border';
+  glowElement.appendChild(glowBorder);
+  
+  // 添加到body
+  document.body.appendChild(glowElement);
+  
+  // 强制重绘以确保动画触发
+  glowElement.offsetHeight;
+  
+  // 触发动画
+  requestAnimationFrame(() => {
+    glowElement.classList.add('show');
+    
+    // CSS动画结束后立即开始淡出
+    const animationDuration = cssAnimationDuration * 1000;
+    setTimeout(() => {
+      if (glowElement && glowElement.parentNode) {
+        glowElement.classList.remove('show');
+        glowElement.classList.add('hide');
+        
+        // 淡出完成后移除
+        setTimeout(() => {
+          if (glowElement && glowElement.parentNode) {
+            glowElement.remove();
+          }
+        }, 300);
+      }
+    }, animationDuration);
+  });
+}
+
+// 将函数暴露到全局作用域，供main.js调用
+window.showRainbowBorder = showRainbowBorder;
+
+// ==========================================
+// 紧凑模式下的任务项预览提示框
+// ==========================================
+
+/**
+ * 为紧凑模式下的任务项设置预览提示框
+ * @param {HTMLElement} item - 任务项元素
+ * @param {Object} todo - 任务数据对象
+ */
+function setupCompactTooltip(item, todo) {
+  // 创建提示框元素
+  const tooltip = document.createElement('div');
+  tooltip.className = 'compact-tooltip';
+  tooltip.innerHTML = generateTooltipContent(todo);
+  
+  // 将提示框添加到body，实现全局固定定位
+  document.body.appendChild(tooltip);
+  
+  // 鼠标进入时检查是否需要显示提示框
+  item.addEventListener('mouseenter', () => {
+    // 检查任务项文字是否被省略（有...）
+    const textElement = item.querySelector('.todo-text');
+    if (textElement && isTextTruncated(textElement)) {
+      tooltip.classList.add('show');
+    }
+  });
+  
+  // 鼠标离开时隐藏提示框
+  item.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('show');
+  });
+}
+
+/**
+ * 检查元素文字是否被省略
+ * @param {HTMLElement} element - 要检查的元素
+ * @returns {boolean} 是否被省略
+ */
+function isTextTruncated(element) {
+  return element.scrollWidth > element.clientWidth;
+}
+
+/**
+ * 生成提示框内容
+ * @param {Object} todo - 任务数据对象
+ * @returns {string} HTML内容
+ */
+function generateTooltipContent(todo) {
+  const priorityText = {
+    high: '高优先级',
+    medium: '中优先级',
+    low: '低优先级'
+  }[todo.priority] || '中优先级';
+  
+  const priorityColor = {
+    high: '#ff3b30',
+    medium: '#ff9500',
+    low: '#34c759'
+  }[todo.priority] || '#ff9500';
+  
+  let content = `
+    <div class="tooltip-header">
+      <span class="tooltip-priority" style="color: ${priorityColor}">●</span>
+      <span class="tooltip-priority-text">${priorityText}</span>
+    </div>
+    <div class="tooltip-text">${escapeHtml(todo.text)}</div>
+  `;
+  
+  // 添加截止日期
+  if (todo.dueDate) {
+    const dueDate = new Date(todo.dueDate);
+    const now = new Date();
+    const isOverdue = dueDate < now && !todo.completed;
+    const dateText = getDisplayDate(dueDate);
+    const timeText = dueDate.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    
+    content += `
+      <div class="tooltip-due-date ${isOverdue ? 'overdue' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>${dateText} ${timeText}</span>
+      </div>
+    `;
+  }
+  
+  // 添加子任务信息
+  if (todo.subtasks && todo.subtasks.length > 0) {
+    const completedCount = todo.subtasks.filter(st => st.completed).length;
+    const totalCount = todo.subtasks.length;
+    content += `
+      <div class="tooltip-subtasks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+        <span>子任务 ${completedCount}/${totalCount}</span>
+      </div>
+    `;
+  }
+  
+  return content;
+}
+
+/**
+ * HTML转义，防止XSS攻击
+ * @param {string} text - 原始文本
+ * @returns {string} 转义后的文本
+ */
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }

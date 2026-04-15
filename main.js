@@ -169,7 +169,7 @@ function animateWindowPosition(targetX, targetY, duration = ANIMATION_DURATION) 
 
 // 创建窗口
 function createWindow() {
-  const iconPath = path.join(__dirname, 'static', 'img', 'e3ef52dfb1fb4ea48c45b0db462fc6a8.jpeg~tplv-a9rns2rl98-image_raw_b.png');
+  const iconPath = path.join(__dirname, 'static', 'img', 'logo.png');
   mainWindow = new BrowserWindow({
     width: 450,
     height: 800,
@@ -198,6 +198,9 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    // 默认开启置顶
+    mainWindow.setAlwaysOnTop(true);
+    isWindowPinned = true;
   });
 
   mainWindow.on('closed', () => {
@@ -403,6 +406,56 @@ async function showWindowFromEdge() {
   });
 }
 
+// 从边缘显示窗口并显示彩虹边框效果（托盘点击时使用）
+async function showWindowFromEdgeWithGlow() {
+  if (!mainWindow || !isEdgeHidden) return;
+
+  const bounds = await getWindowBounds();
+  const display = screen.getDisplayNearestPoint({ x: bounds.x, y: bounds.y });
+  const screenBounds = display.bounds;
+
+  let targetX, targetY;
+
+  if (hiddenEdge === 'top') {
+    targetX = bounds.x;
+    targetY = 0;
+  } else if (hiddenEdge === 'left') {
+    targetX = 0;
+    targetY = bounds.y;
+  } else {
+    targetX = screenBounds.width - bounds.windowWidth;
+    targetY = bounds.y;
+  }
+
+  // 先显示窗口（不聚焦，等动画完成）
+  mainWindow.show();
+  
+  // 清除可能残留的fade-out类
+  mainWindow.webContents.executeJavaScript(`
+    document.body.classList.remove('fade-out');
+  `);
+  
+  // 使用滑动动画
+  await animateWindowPosition(targetX, targetY).then(() => {
+    isEdgeHidden = false;
+    isWindowShownFromEdge = true;
+    hiddenEdge = null;
+    
+    // 动画完成后触发彩虹边框效果
+    setTimeout(() => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.executeJavaScript(`
+          if (typeof showRainbowBorder === 'function') {
+            showRainbowBorder(0.5);
+          }
+        `).catch(err => console.log('Rainbow border error:', err));
+      }
+    }, 100);
+  });
+  
+  mainWindow.focus();
+}
+
 // 开始鼠标监控
 function startMouseMonitor() {
   if (mouseMonitorTimer) {
@@ -516,7 +569,7 @@ function toggleEdgeDocking(enabled) {
 
 // 创建托盘图标
 function createTray() {
-  const trayIconPath = path.join(__dirname, 'static', 'img', 'e3ef52dfb1fb4ea48c45b0db462fc6a8.jpeg~tplv-a9rns2rl98-image_raw_b.png');
+  const trayIconPath = path.join(__dirname, 'static', 'img', 'logo.png');
   const trayIcon = nativeImage.createFromPath(trayIconPath);
 
   // 创建不同尺寸的图标
@@ -542,8 +595,26 @@ function createTray() {
     {
       label: '显示窗口',
       click: () => {
-        mainWindow.show();
-        mainWindow.focus();
+        if (isEdgeHidden) {
+          showWindowFromEdgeWithGlow();
+        } else {
+          mainWindow.show();
+          mainWindow.focus();
+          // 清除可能残留的fade-out类
+          mainWindow.webContents.executeJavaScript(`
+            document.body.classList.remove('fade-out');
+          `);
+          // 非吸附状态下也显示彩虹边框提醒
+          setTimeout(() => {
+            if (mainWindow && !mainWindow.isDestroyed()) {
+              mainWindow.webContents.executeJavaScript(`
+                if (typeof showRainbowBorder === 'function') {
+                  showRainbowBorder(0.5);
+                }
+              `).catch(err => console.log('Rainbow border error:', err));
+            }
+          }, 100);
+        }
       }
     },
     {
@@ -564,25 +635,27 @@ function createTray() {
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {
-    if (mainWindow.isVisible()) {
-      // 渐出后隐藏
-      mainWindow.webContents.executeJavaScript(`
-        document.body.classList.add('fade-out');
-      `);
-
-      setTimeout(() => {
-        mainWindow.hide();
-      }, 300);
+    // 托盘点击只显示窗口，不最小化
+    if (!mainWindow.isVisible()) {
+      // 检查是否处于边缘吸附状态
+      if (isEdgeHidden) {
+        // 从边缘滑出并显示彩虹边框
+        showWindowFromEdgeWithGlow();
+      } else {
+        // 普通显示窗口并渐入
+        mainWindow.show();
+        mainWindow.focus();
+        // 先移除fade-out，再添加fade-in，确保动画正确触发
+        mainWindow.webContents.executeJavaScript(`
+          document.body.classList.remove('fade-out');
+          document.body.classList.add('fade-in');
+          setTimeout(() => {
+            document.body.classList.remove('fade-in');
+          }, 300);
+        `);
+      }
     } else {
-      // 显示窗口并渐入
-      mainWindow.show();
-      mainWindow.webContents.executeJavaScript(`
-        document.body.classList.remove('fade-out');
-        document.body.classList.add('fade-in');
-        setTimeout(() => {
-          document.body.classList.remove('fade-in');
-        }, 300);
-      `);
+      // 窗口已可见，只聚焦不隐藏
       mainWindow.focus();
     }
   });
@@ -721,7 +794,7 @@ function showSettings() {
     return;
   }
 
-  const iconPath = path.join(__dirname, 'static', 'img', 'e3ef52dfb1fb4ea48c45b0db462fc6a8.jpeg~tplv-a9rns2rl98-image_raw_b.png');
+  const iconPath = path.join(__dirname, 'static', 'img', 'logo.png');
   settingsWindow = new BrowserWindow({
     width: 400,
     height: 500,
